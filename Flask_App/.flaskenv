@@ -1,0 +1,2 @@
+FLASK_APP = LED.py
+FLASK_DEBUG = 1
