@@ -4,7 +4,7 @@ import serial
 from flask_cors import CORS
 
 app = Flask(__name__)
-CORS(app)
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Initialize serial connection
 global serialInst
@@ -29,6 +29,35 @@ def index():
     portsList = [str(port) for port in ports]
     return render_template('index.html', ports=portsList)
 
+@app.route('/sendcommand', methods=['POST'])
+def send_command():
+    com_port = request.form.get('com_port')
+    serialInst.baudrate = 9600
+    serialInst.port = 'COM3'
+
+    command = request.form.get('command')
+
+    try:
+        command= "ON"
+        serialInst.write(command.encode('utf-8'))
+
+        return "Connected to Arduino " + command
+    except serial.SerialException as e:
+        return f"Failed to open serial port: {e}"
+    
+    '''command = request.form.get('command')
+    print("Received command:", command)
+    
+    if not serialInst.is_open:
+        return "Serial connection not open"
+
+    try:
+        serialInst.write(command.encode('utf-8'))
+        print(command)
+        return "Command sent to Arduino"
+    except serial.SerialException as e:
+        return f"Failed to send command: {e}"'''
+
 @app.route('/connect', methods=['POST'])
 def connect():
     
@@ -37,25 +66,16 @@ def connect():
     serialInst.port = 'COM3'
 
     try:
+        command = "ON"
         serialInst.open()
+        
+
         return "Connected to Arduino"
     except serial.SerialException as e:
         return f"Failed to open serial port: {e}"
 
 
-@app.route('/send-command', methods=['POST'])
-def send_command():
-    command = request.form.get('command')
-    print("Received command:", command)
-    
-    if not serialInst.is_open:
-        return "Serial connection not open"
 
-    try:
-        serialInst.write(command.encode('utf-8'))
-        return "Command sent to Arduino"
-    except serial.SerialException as e:
-        return f"Failed to send command: {e}"
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -7,17 +7,19 @@ const LightControl = () => {
     const [comPort, setComPort] = useState('');
 
     const sendCommand = (command) => {
-        axios.post('http://localhost:5000/send-command', {command: command ,},)
+        axios.post('http://localhost:5000/sendcommand', {command: command ,})
             .then(response => {
                 setResponse(response.data);
+                console.log(response.data);
             })
             .catch(error => {
                 console.error('Error sending command:', error);
                 setResponse('Error sending command ' + error);
             });
     };
+
     const connectArduino = () => {
-        axios.post('http://localhost:5000/connect', { com_port: comPort })
+        axios.post('http://localhost:5000/connect', { com_port: comPort, })
             .then(response => {
                 setResponse(response.data);
             })
@@ -26,6 +28,53 @@ const LightControl = () => {
                 setResponse('Error connecting to Arduino');
             });
     };
+
+    /*const sendCommand = (command) => {
+        fetch('http://localhost:5000/sendcommand', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ command: command })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setResponse(data);
+        })
+        .catch(error => {
+            console.error('Error sending command:', error);
+            setResponse('Error sending command ' + error);
+        });
+    };
+    
+    const connectArduino = () => {
+        fetch('http://localhost:5000/connect', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ com_port: comPort })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            setResponse(data);
+        })
+        .catch(error => {
+            console.error('Error connecting to Arduino:', error);
+            setResponse('Error connecting to Arduino');
+        });
+    };*/
+    
 
     return ( 
         <div className="light">
