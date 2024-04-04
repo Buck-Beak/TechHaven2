@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template,jsonify
 import serial.tools.list_ports
 import serial
 from flask_cors import CORS
+from flask import Response
+
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
@@ -28,43 +30,41 @@ def index():
     portsList = [str(port) for port in ports]
     return render_template('index.html', ports=portsList)
 
-@app.route('/sendcommand', methods=['POST'])
-def send_commandON():
-    try:
-        cmd = "ON"
-        serialInst.write(cmd.encode('utf-8'))
-
-        return "Command sent " + cmd
-    except serial.SerialException as e:
-        return f"Failed to sent command: {e}"
-    
-@app.route('/sendcommandOFF', methods=['POST'])
-def send_commandOFF():
-    try:
-        cmd = "OFF"
-        serialInst.write(cmd.encode('utf-8'))
-
-        return "Command sent " + cmd
-    except serial.SerialException as e:
-        return f"Failed to sent command: {e}"
-
-
 @app.route('/connect', methods=['POST'])
 def connect():
-    
-    com_port = request.form.get('com_port')
     serialInst.baudrate = 9600
     serialInst.port = 'COM3'
 
     try:
-        command = "ON"
         serialInst.open()
         return "Connected to Arduino"
     except serial.SerialException as e:
         return f"Failed to open serial port: {e}"
+    
+@app.route('/buzzerState', methods=['POST'])
 
 
+def get_buzzer_state():
+    try:
+        if serialInst.in_waiting:
+            packet = serialInst.readline().strip()
+            if packet == b'Buzzer ON':
+                return jsonify({'buzzer_state': 'on'})
+            elif packet == b'Buzzer OFF':
+                return jsonify({'buzzer_state': 'off'})
+            else:
+                return jsonify({'error': 'Unknown response from Arduino'})
+    except serial.SerialException as e:
+        return f"Failed to get buzzer state: {e}"
 
+'''    
+@app.route('/buzzerON', methods=['POST'])
+def buzzerON():
+
+
+@app.route('/buzzerOFF', methods=['POST'])
+def buzzerOFF():
+'''  
 
 if __name__ == '__main__':
     app.run(debug=True)

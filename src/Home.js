@@ -12,7 +12,10 @@ const Home = () => {
             <button className="button2">
               <Link to="/LightControl">Light Control</Link>
             </button>
-            <div className="alarm"></div>
+            <div className="alarm">
+            <Link to="/Alarm">Alarm</Link>
+            </div>
+           
         
         </div>
         <ul className="circles">

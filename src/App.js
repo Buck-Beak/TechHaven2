@@ -3,6 +3,7 @@ import Home from './Home';
 import {BrowserRouter as Router, Route,Switch} from 'react-router-dom';
 import FanControl from './FanControl';
 import LightControl from './LightControl';
+import Alarm from './Alarm';
 
 function App() {
   return (
@@ -19,6 +20,9 @@ function App() {
             </Route>
             <Route path="/LightControl">
               <LightControl />
+            </Route>
+            <Route path="/Alarm">
+              <Alarm />
             </Route>
           </Switch>
         </div>

@@ -159,6 +159,7 @@ h1 {
 
 
 .button1{
+    z-index: 1;
     height: 250px;
     width: 500px;
     position: relative;
@@ -171,6 +172,7 @@ h1 {
 }
 
 .button2{
+    z-index: 1;
     height: 250px;
     width: 500px;
     position: relative;
@@ -190,6 +192,7 @@ h1 {
 }
 
 .alarm{
+    z-index: 1;
     height: 150px;
     width: 150px;
     position: relative;

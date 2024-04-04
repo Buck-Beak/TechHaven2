@@ -3,10 +3,11 @@ const Navbar = () => {
     return (
       <nav className="navbar">
         
-        <div className="links">
+        {/*<div className="links">
           <Link to="/">Home</Link>
           <Link to="/FanControl">Fan Control</Link>
-        </div>
+        </div>*/}
+        <Link to="/Alarm">Alarm</Link>
       </nav>
     );
   }
